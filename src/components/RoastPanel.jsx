@@ -4,14 +4,14 @@ import useResumeStore from '../store/resumeStore'
 import { useGeminiRoast } from '../hooks/useGeminiRoast'
 
 const RoastPanel = () => {
-  const { originalText, roastFeedback } = useResumeStore()
+  const { originalText, roastFeedback, isLoading } = useResumeStore()
   const { rebuildResume, isProcessing } = useGeminiRoast()
   
   // Display data from feedback or placeholder
   const feedback = roastFeedback || {
     score: 0,
-    feedback: "Preparing the roast... If this takes too long, check your API key.",
-    roastItems: ["Waiting for the fire..."]
+    feedback: isLoading ? "The Roaster is sharpening their knives... Preparing the most brutal review of your career." : "Check your API key. The roast could not be generated.",
+    roastItems: isLoading ? ["Igniting the flames...", "Analyzing your failures...", "Consulting the recruiters council..."] : ["Error: No feedback received."]
   }
 
   const handleRebuild = async () => {
@@ -34,20 +34,24 @@ const RoastPanel = () => {
 
       {/* Right: Roast Feedback */}
       <div className="flex flex-col gap-6">
-        <div className="glass-card rounded-3xl p-8 border-orange-600/30 bg-orange-600/5 relative overflow-hidden">
+        <div className={`glass-card rounded-3xl p-8 border-orange-600/30 bg-orange-600/5 relative overflow-hidden ${isLoading ? 'animate-pulse' : ''}`}>
           <div className="absolute top-0 right-0 w-32 h-32 bg-orange-600/10 blur-3xl -z-10 rounded-full translate-x-1/2 -translate-y-1/2"></div>
           
           <div className="flex items-center justify-between mb-8 text-left">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-orange-600/20 flex items-center justify-center border border-orange-600/50">
-                <Flame className="text-orange-500" size={20} />
+                {isLoading ? <Loader2 className="text-orange-500 animate-spin" size={20} /> : <Flame className="text-orange-500" size={20} />}
               </div>
-              <h2 className="text-2xl font-bold text-orange-500 text-left">The Roast</h2>
+              <h2 className="text-2xl font-bold text-orange-500 text-left">
+                {isLoading ? 'Roasting...' : 'The Roast'}
+              </h2>
             </div>
-            <div className="flex flex-col items-end">
-              <span className="text-4xl font-black text-orange-500">{feedback.score}<span className="text-sm text-orange-600/50">/100</span></span>
-              <span className="text-[10px] uppercase font-bold tracking-tighter text-orange-600">Burn Score</span>
-            </div>
+            {!isLoading && (
+              <div className="flex flex-col items-end">
+                <span className="text-4xl font-black text-orange-500">{feedback.score}<span className="text-sm text-orange-600/50">/100</span></span>
+                <span className="text-[10px] uppercase font-bold tracking-tighter text-orange-600">Burn Score</span>
+              </div>
+            )}
           </div>
 
           <p className="text-orange-100/80 leading-relaxed italic mb-8 border-l-2 border-orange-600/50 pl-4 py-1 text-left">
@@ -56,7 +60,7 @@ const RoastPanel = () => {
 
           <div className="space-y-4">
             {feedback.roastItems.map((item, i) => (
-              <div key={i} className="flex gap-4 p-4 rounded-xl bg-orange-600/10 border border-orange-600/20 animate-in slide-in-from-right-4 duration-500" style={{ animationDelay: `${i * 100}ms` }}>
+              <div key={i} className="flex gap-4 p-4 rounded-xl bg-orange-600/10 border border-orange-600/20">
                 <AlertTriangle className="text-orange-500 shrink-0 mt-0.5" size={16} />
                 <p className="text-sm text-orange-100/70 leading-relaxed text-left">{item}</p>
               </div>
@@ -73,15 +77,15 @@ const RoastPanel = () => {
           </div>
           <button 
             onClick={handleRebuild}
-            disabled={isProcessing}
-            className="group flex flex-col items-start p-6 rounded-2xl bg-white text-zinc-950 hover:bg-zinc-200 transition-all border-none disabled:opacity-50 disabled:cursor-wait"
+            disabled={isProcessing || isLoading || !roastFeedback}
+            className="group flex flex-col items-start p-6 rounded-2xl bg-white text-zinc-950 hover:bg-zinc-200 transition-all border-none disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <div className="mb-2 text-emerald-600">
               {isProcessing ? <Loader2 className="animate-spin" size={20} /> : <Target size={20} />}
             </div>
             <div className="flex items-center gap-2 w-full justify-between">
               <h4 className="text-sm font-bold">{isProcessing ? 'Optimizing...' : 'Fix Everything'}</h4>
-              {!isProcessing && <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />}
+              {(!isProcessing && !isLoading && roastFeedback) && <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />}
             </div>
             <p className="text-[10px] text-zinc-500 text-left">Generate optimized version.</p>
           </button>

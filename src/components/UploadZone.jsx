@@ -7,21 +7,23 @@ import { useGeminiRoast } from '../hooks/useGeminiRoast'
 const UploadZone = () => {
   const [isOver, setIsOver] = useState(false)
   const { parsePdf, isParsing, error: parseError } = usePdfParser()
-  const { roastResume, isProcessing: isRoasting } = useGeminiRoast()
+  const { roastResume } = useGeminiRoast()
   
   const setOriginalText = useResumeStore((state) => state.setOriginalText)
+  const setMode = useResumeStore((state) => state.setMode)
 
   const handleFile = useCallback(async (file) => {
     if (file && file.type === 'application/pdf') {
       try {
         const text = await parsePdf(file)
         setOriginalText(text)
-        await roastResume(text)
+        setMode('roast') // Transition IMMEDIATELY after parsing
+        roastResume(text) // Don't await here, let the RoastPanel handle it
       } catch (err) {
         console.error(err)
       }
     }
-  }, [parsePdf, setOriginalText, roastResume])
+  }, [parsePdf, setOriginalText, setMode, roastResume])
 
   const onDragOver = (e) => {
     e.preventDefault()
@@ -42,8 +44,6 @@ const UploadZone = () => {
     handleFile(file)
   }
 
-  const isLoading = isParsing || isRoasting
-
   return (
     <div className="w-full max-w-2xl mx-auto">
       <div
@@ -52,7 +52,7 @@ const UploadZone = () => {
         onDrop={onDrop}
         className={`relative group border-2 border-dashed rounded-3xl p-12 transition-all duration-300 flex flex-col items-center justify-center cursor-pointer
           ${isOver ? 'border-purple-500 bg-purple-500/10 scale-[1.02]' : 'border-zinc-800 bg-zinc-900/30 hover:border-zinc-700 hover:bg-zinc-900/50'}
-          ${isLoading ? 'pointer-events-none' : ''}`}
+          ${isParsing ? 'pointer-events-none' : ''}`}
       >
         <input
           type="file"
@@ -63,7 +63,7 @@ const UploadZone = () => {
 
         <div className={`w-20 h-20 rounded-2xl flex items-center justify-center mb-6 border transition-all duration-500
           ${isOver ? 'bg-purple-500/20 border-purple-500/40' : 'bg-zinc-800/50 border-zinc-700/50'}`}>
-          {isLoading ? (
+          {isParsing ? (
             <Loader2 className="text-purple-400 animate-spin" size={32} />
           ) : (
             <Upload className={isOver ? 'text-purple-400' : 'text-zinc-500'} size={32} />
@@ -71,11 +71,11 @@ const UploadZone = () => {
         </div>
 
         <h3 className="text-2xl font-semibold mb-2">
-          {isLoading ? (isParsing ? 'Parsing Resume...' : 'Roasting with Gemini...') : 'Drop your resume'}
+          {isParsing ? 'Parsing Resume...' : 'Drop your resume'}
         </h3>
         <p className="text-zinc-500 text-center max-w-sm">
-          {isLoading 
-            ? 'Our AI is analyzing your failures and successes. Hold tight.' 
+          {isParsing 
+            ? 'We are extracting text from your PDF. Almost there.' 
             : 'Drag and drop your PDF here, or click to browse. We only accept PDF files for now.'}
         </p>
 

@@ -1,16 +1,44 @@
-# React + Vite
+# 🔥 Resume Roaster + Builder
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A premium, AI-powered tool that brutally roasts your resume and helps you rebuild it into an ATS-optimized masterpiece. Powered by **Google Gemini 1.5 Flash**.
 
-Currently, two official plugins are available:
+## 🚀 Getting Started
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Follow these steps to get the project running locally:
 
-## React Compiler
+### 1. Clone the repository
+```bash
+git clone https://github.com/atharvwalawalkar05-pixel/Resume-Roaster.git
+cd Resume-Roaster
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 2. Install Dependencies
+Make sure you have [Node.js](https://nodejs.org/) installed, then run:
+```bash
+npm install
+```
 
-## Expanding the ESLint configuration
+### 3. Set up Environment Variables
+Create a `.env` file in the root directory (one has been created for you if you're working locally) and add your [Google Gemini API Key](https://aistudio.google.com/):
+```env
+VITE_GEMINI_API_KEY=your_actual_api_key_here
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 4. Run the Development Server
+```bash
+npm run dev
+```
+
+### 5. Open the App
+Navigate to `http://localhost:5173` in your browser.
+
+## 🛠️ Technical Stack
+- **React + Vite**: Fast, modern frontend builds.
+- **Zustand**: Lightweight global state management.
+- **Tailwind CSS v4**: Advanced, utility-first styling for premium aesthetics.
+- **Google Generative AI**: Gemini 1.5 Flash for high-speed, free-tier AI analysis.
+- **PDF.js**: Browser-side PDF text extraction.
+- **jsPDF**: Clean, professional PDF generation.
+
+---
+Built with ❤️ for developers who take their careers seriously (and can handle a little roasting).

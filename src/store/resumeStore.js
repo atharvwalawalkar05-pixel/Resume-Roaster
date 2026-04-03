@@ -7,8 +7,10 @@ const useResumeStore = create((set) => ({
   rebuiltText: '',
   currentMode: 'upload', // 'upload' | 'roast' | 'rebuild'
   isLoading: false,
+  error: null,
 
   // Actions
+  setError: (error) => set({ error }),
   setOriginalText: (text) => set({ originalText: text }),
   
   setRoastFeedback: (feedback) => set({ 

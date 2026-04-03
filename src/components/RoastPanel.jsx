@@ -4,8 +4,8 @@ import useResumeStore from '../store/resumeStore'
 import { useGeminiRoast } from '../hooks/useGeminiRoast'
 
 const RoastPanel = () => {
-  const { originalText, roastFeedback, isLoading } = useResumeStore()
-  const { rebuildResume, isProcessing, error: apiError } = useGeminiRoast()
+  const { originalText, roastFeedback, isLoading, error: apiError } = useResumeStore()
+  const { rebuildResume, isProcessing } = useGeminiRoast()
   
   // Display data from feedback or placeholder
   const feedback = roastFeedback || {

@@ -8,11 +8,11 @@ import useResumeStore from '../store/resumeStore'
  */
 export const useGeminiRoast = () => {
   const [isProcessing, setIsProcessing] = useState(false)
-  const [error, setError] = useState(null)
   
   const setRoastFeedback = useResumeStore(state => state.setRoastFeedback)
   const setRebuiltText = useResumeStore(state => state.setRebuiltText)
   const setLoading = useResumeStore(state => state.setLoading)
+  const setError = useResumeStore(state => state.setError)
 
   const callGemini = async (systemPrompt, userPrompt) => {
     const apiKey = import.meta.env.VITE_GEMINI_API_KEY
@@ -40,7 +40,6 @@ export const useGeminiRoast = () => {
     try {
       const resultText = await callGemini(SYSTEM_PROMPTS.ROASTER, buildRoastPrompt(text))
       
-      // Attempt to parse JSON from Gemini's response
       const jsonMatch = resultText.match(/\{[\s\S]*\}/)
       const feedback = jsonMatch ? JSON.parse(jsonMatch[0]) : JSON.parse(resultText)
       
@@ -53,9 +52,8 @@ export const useGeminiRoast = () => {
       setError(err.toString())
       setIsProcessing(false)
       setLoading(false)
-      // Transition back or show error
     }
-  }, [setRoastFeedback, setLoading])
+  }, [setRoastFeedback, setLoading, setError])
 
   const rebuildResume = useCallback(async (text, roastFeedback) => {
     setIsProcessing(true)

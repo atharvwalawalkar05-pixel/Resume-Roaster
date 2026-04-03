@@ -1,10 +1,9 @@
 import { useState, useCallback } from 'react'
 import * as pdfjs from 'pdfjs-dist'
+import pdfWorker from 'pdfjs-dist/build/pdf.worker.mjs?url'
 
-// Set up the worker for pdfjs-dist
-// We use a CDN version or the local one. In Vite, we can usually just point to the worker in node_modules.
-// However, the cleanest way for a hook is often to import it.
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.mjs`
+// Set up the worker for pdfjs-dist using Vite's URL asset loading
+pdfjs.GlobalWorkerOptions.workerSrc = pdfWorker
 
 export const usePdfParser = () => {
   const [error, setError] = useState(null)
@@ -16,7 +15,11 @@ export const usePdfParser = () => {
     
     try {
       const arrayBuffer = await file.arrayBuffer()
-      const loadingTask = pdfjs.getDocument({ data: arrayBuffer })
+      const loadingTask = pdfjs.getDocument({ 
+        data: arrayBuffer,
+        useSystemFonts: true,
+        isEvalDisabled: true,
+      })
       const pdf = await loadingTask.promise
       
       let fullText = ''
@@ -25,9 +28,13 @@ export const usePdfParser = () => {
         const page = await pdf.getPage(i)
         const textContent = await page.getTextContent()
         const strings = textContent.items.map(item => item.str)
-        fullText += strings.join(' ') + '\n'
+        fullText += (strings.join(' ') || '') + '\n'
       }
       
+      if (!fullText.trim()) {
+        throw new Error('No text content found in the PDF.')
+      }
+
       setIsParsing(false)
       return fullText
     } catch (err) {

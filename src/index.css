@@ -1,0 +1,37 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+@theme {
+  --font-sans: 'Outfit', system-ui, -apple-system, sans-serif;
+  --color-brand-primary: #a855f7;
+  --color-brand-secondary: #ec4899;
+}
+
+:root {
+  font-family: var(--font-sans);
+}
+
+body {
+  @apply bg-zinc-950 text-zinc-100 antialiased min-h-screen selection:bg-purple-500/30;
+}
+
+/* Premium Utilities */
+.glass-card {
+  @apply bg-zinc-900/50 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.37)];
+}
+
+.gradient-border {
+  position: relative;
+  border-radius: 1rem;
+  background: linear-gradient(to right, var(--color-brand-primary), var(--color-brand-secondary));
+  padding: 1px;
+}
+
+.gradient-border > * {
+  @apply bg-zinc-950 rounded-[0.9375rem];
+}
+
+.text-gradient {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-500;
+}
+

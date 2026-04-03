@@ -49,10 +49,11 @@ export const useGeminiRoast = () => {
       setLoading(false)
       return feedback
     } catch (err) {
-      console.error('Gemini Roast Error:', err)
-      setError(err.message || 'Failed to roast resume with Gemini.')
+      console.error('Gemini FULL Error:', err)
+      setError(err.toString())
       setIsProcessing(false)
       setLoading(false)
+      // Transition back or show error
     }
   }, [setRoastFeedback, setLoading])
 

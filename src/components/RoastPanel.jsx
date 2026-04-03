@@ -5,13 +5,21 @@ import { useGeminiRoast } from '../hooks/useGeminiRoast'
 
 const RoastPanel = () => {
   const { originalText, roastFeedback, isLoading } = useResumeStore()
-  const { rebuildResume, isProcessing } = useGeminiRoast()
+  const { rebuildResume, isProcessing, error: apiError } = useGeminiRoast()
   
   // Display data from feedback or placeholder
   const feedback = roastFeedback || {
     score: 0,
-    feedback: isLoading ? "The Roaster is sharpening their knives... Preparing the most brutal review of your career." : "Check your API key. The roast could not be generated.",
-    roastItems: isLoading ? ["Igniting the flames...", "Analyzing your failures...", "Consulting the recruiters council..."] : ["Error: No feedback received."]
+    feedback: isLoading 
+      ? "The Roaster is sharpening their knives..." 
+      : apiError 
+        ? `API Error: ${apiError}`
+        : "Check your API key. The roast could not be generated.",
+    roastItems: isLoading 
+      ? ["Igniting the flames...", "Analyzing your failures..."] 
+      : apiError 
+        ? ["Failed to connect to Gemini.", "Check the console for details."]
+        : ["Error: No feedback received."]
   }
 
   const handleRebuild = async () => {

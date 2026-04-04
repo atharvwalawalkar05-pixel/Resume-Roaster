@@ -18,7 +18,10 @@ const useResumeStore = create((set) => ({
     currentMode: 'roast' 
   }),
 
-  setRebuiltText: (text) => set({ rebuiltText: text }),
+  setRebuiltText: (text) => set({ 
+    rebuiltText: text,
+    currentMode: 'rebuild'
+  }),
 
   setMode: (mode) => set({ currentMode: mode }),
 

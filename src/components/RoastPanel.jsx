@@ -98,6 +98,14 @@ const RoastPanel = () => {
             <p className="text-[10px] text-zinc-500 text-left">Generate optimized version.</p>
           </button>
         </div>
+
+        {/* Error message for rebuild/api errors */}
+        {apiError && !isLoading && !isProcessing && (
+          <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-300">
+            <AlertTriangle size={14} className="shrink-0" />
+            <p>{apiError}</p>
+          </div>
+        )}
       </div>
     </div>
   )

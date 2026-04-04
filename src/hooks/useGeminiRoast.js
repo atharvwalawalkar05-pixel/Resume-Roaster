@@ -18,8 +18,8 @@ export const useGeminiRoast = () => {
     const apiKey = import.meta.env.VITE_GEMINI_API_KEY
     
     if (!apiKey) {
-      console.error('API Key Missing: Check your .env file for VITE_GEMINI_API_KEY.')
-      throw new Error("Missing VITE_GEMINI_API_KEY in .env file.")
+      console.error('API Key Missing: Please set VITE_GEMINI_API_KEY in your environment variables.')
+      throw new Error("Missing VITE_GEMINI_API_KEY. Please set it in your environment variables (e.g., in Netlify settings).")
     }
 
     const genAI = new GoogleGenerativeAI(apiKey, { apiVersion: 'v1beta' })
